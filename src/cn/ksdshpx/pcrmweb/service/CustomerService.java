@@ -1,6 +1,7 @@
 package cn.ksdshpx.pcrmweb.service;
 
 import cn.ksdshpx.pwebcrm.dao.CustomerDao;
+import cn.ksdshpx.pwebcrm.domain.Customer;
 
 /**
   * 业务逻辑层
@@ -9,4 +10,7 @@ import cn.ksdshpx.pwebcrm.dao.CustomerDao;
  */
 public class CustomerService {
 	private CustomerDao customerDao = new CustomerDao();
+	public void add(Customer customer) {
+		customerDao.add(customer);
+	}
 }
