@@ -1,6 +1,7 @@
 package cn.ksdshpx.pwebcrm.web.servlet;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -32,5 +33,15 @@ public class CustomerServlet extends BaseServlet {
 		request.setAttribute("msg", "恭喜，添加客户成功！");
 		// 5.转发到msg.jsp
 		return "f:/msg.jsp";
+	}
+
+	public String findAll(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// 1.调用service的findAll方法
+		List<Customer> customerList = customerService.findAll();
+		// 2.往request域中设置值
+		request.setAttribute("customerList", customerList);
+		// 3.转发到msg.jsp
+		return "f:/list.jsp";
 	}
 }
