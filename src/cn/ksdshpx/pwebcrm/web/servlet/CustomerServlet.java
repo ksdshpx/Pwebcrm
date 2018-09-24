@@ -22,6 +22,15 @@ public class CustomerServlet extends BaseServlet {
 	private static final long serialVersionUID = 1L;
 	private CustomerService customerService = new CustomerService();
 
+	/**
+	 * 添加客户
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	public String add(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// 1.封装表单数据到Customer
 		Customer customer = CommonUtils.toBean(request.getParameterMap(), Customer.class);
@@ -35,6 +44,15 @@ public class CustomerServlet extends BaseServlet {
 		return "f:/msg.jsp";
 	}
 
+	/**
+	 * 查询所有客户
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	public String findAll(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// 1.调用service的findAll方法
