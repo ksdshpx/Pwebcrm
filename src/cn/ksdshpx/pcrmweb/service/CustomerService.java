@@ -31,4 +31,32 @@ public class CustomerService {
 	public List<Customer> findAll() {
 		return customerDao.findAll();
 	}
+
+	/**
+	 * 根据cid加载客户信息
+	 * 
+	 * @param cid
+	 * @return
+	 */
+	public Customer load(String cid) {
+		return customerDao.load(cid);
+	}
+
+	/**
+	 * 编辑客户信息
+	 * 
+	 * @param customer
+	 */
+	public void edit(Customer customer) {
+		customerDao.edit(customer);
+	}
+
+	/**
+	 * 删除客户信息
+	 * 
+	 * @param cid
+	 */
+	public void delete(String cid) {
+		customerDao.delete(cid);
+	}
 }

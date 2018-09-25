@@ -62,4 +62,67 @@ public class CustomerServlet extends BaseServlet {
 		// 3.转发到msg.jsp
 		return "f:/list.jsp";
 	}
+
+	/**
+	 * 预加载客户信息
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	public String preEdit(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// 1.得到cid
+		String cid = request.getParameter("cid");
+		// 2.调用service方法，返回Customer对象
+		Customer customer = customerService.load(cid);
+		// 3.将返回的Customer对象放入request域中
+		request.setAttribute("customer", customer);
+		// 4.转发到edit.jsp
+		return "f:/edit.jsp";
+	}
+
+	/**
+	 * 编辑客户信息
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	public String edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// 1.封装表单数据到Customer对象
+		Customer customer = CommonUtils.toBean(request.getParameterMap(), Customer.class);
+		customer.setCid(request.getParameter("cid"));
+		// 2.调用service方法，返回Customer对象
+		customerService.edit(customer);
+		// 3.保存编辑成功信息到request域中
+		request.setAttribute("msg", "编辑客户信息成功！");
+		// 4.转发到edit.jsp
+		return "f:/msg.jsp";
+	}
+
+	/**
+	 * 删除客户信息
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	public String delete(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// 1.得到cid
+		String cid = request.getParameter("cid");
+		// 2.调用service方法，删除Customer对象
+		customerService.delete(cid);
+		// 3.保存删除成功信息到request域中
+		request.setAttribute("msg", "编辑客户信息成功！");
+		// 4.转发到msg.jsp
+		return "f:/msg.jsp";
+	}
 }
