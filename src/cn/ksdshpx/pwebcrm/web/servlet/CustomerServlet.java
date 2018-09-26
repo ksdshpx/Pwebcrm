@@ -125,4 +125,25 @@ public class CustomerServlet extends BaseServlet {
 		// 4.转发到msg.jsp
 		return "f:/msg.jsp";
 	}
+
+	/**
+	 * 多条件组合查询
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	public String queryByCretiaria(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// 1.封装表单数据到Customer对象
+		Customer cretiaria = CommonUtils.toBean(request.getParameterMap(), Customer.class);
+		// 2.调用service方法，根据条件对象查询
+		List<Customer> customerList = customerService.queryByCretiaria(cretiaria);
+		// 3.保存查询结果到request域中
+		request.setAttribute("customerList", customerList);
+		// 4.转发到list.jsp
+		return "f:/list.jsp";
+	}
 }

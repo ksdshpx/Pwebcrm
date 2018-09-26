@@ -6,6 +6,7 @@ package cn.ksdshpx.pwebcrm.dao;
  */
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.dbutils.QueryRunner;
@@ -103,5 +104,44 @@ public class CustomerDao {
 					"sfit_" + i + "@163.com", "我是sfit_" + i };
 			qr.update(sql, params);
 		}
+	}
+
+	/**
+	 * 多条件组合查询
+	 * 
+	 * @param cretiaria
+	 * @return
+	 */
+	public List<Customer> queryByCretiaria(Customer cretiaria) {
+		List<Customer> list = null;
+		try {
+			StringBuilder stringBuilder = new StringBuilder("SELECT * FROM t_customer WHERE 1=1");
+			ArrayList arrayList = new ArrayList();
+			String cname = cretiaria.getCname();
+			String gender = cretiaria.getGender();
+			String cellphone = cretiaria.getCellphone();
+			String email = cretiaria.getEmail();
+			if (!(cname == null) && !(cname == "")) {
+				stringBuilder.append(" and cname like ?");
+				arrayList.add("%" + cname + "%");
+			}
+			if (!(gender == null) && !(gender == "")) {
+				stringBuilder.append(" and gender=?");
+				arrayList.add(gender);
+			}
+			if (!(cellphone == null) && !(cellphone == "")) {
+				stringBuilder.append(" and cellphone like ?");
+				arrayList.add("%" + cellphone +"%");
+			}
+			if (!(email == null) && !(email == "")) {
+				stringBuilder.append(" and email like ?");
+				arrayList.add("%" + email +"%");
+			}
+			list = qr.query(stringBuilder.toString(), new BeanListHandler<Customer>(Customer.class),
+					arrayList.toArray());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 }

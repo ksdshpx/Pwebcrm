@@ -59,4 +59,13 @@ public class CustomerService {
 	public void delete(String cid) {
 		customerDao.delete(cid);
 	}
+
+	/**
+	 * 多条件组合查询
+	 * @param cretiaria
+	 * @return
+	 */
+	public List<Customer> queryByCretiaria(Customer cretiaria) {
+		return customerDao.queryByCretiaria(cretiaria);
+	}
 }
