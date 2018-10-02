@@ -49,10 +49,43 @@
 		第${pageBean.pageNow}页/共${pageBean.pageCount}页
 		<a href="<c:url value='/CustomerServlet?method=findAll&pageNow=1'/>">首页</a>
 		<c:if test="${pageBean.pageNow > 1}">
-		<a href="<c:url value='/CustomerServlet?method=findAll&pageNow=${pageBean.pageNow-1}'/>">上一页</a>
+			<a href="<c:url value='/CustomerServlet?method=findAll&pageNow=${pageBean.pageNow-1}'/>">上一页</a>
 		</c:if>
+		<%--分页页码计算 --%>
+		<c:choose>
+			<%--总页数不满10页，从1开始全部显示 --%>
+			<c:when test="${pageBean.pageCount <= 10}">
+				<c:set var="begin" value="1"/>
+				<c:set var="end" value="${pageBean.pageCount}"/>
+			</c:when>
+			<%--总页数大于10页 --%>
+			<c:otherwise>
+				<c:set var="begin" value="${pageBean.pageNow - 5}"/>
+				<c:set var="end" value="${pageBean.pageNow + 4}"/>
+				<%--头溢出 --%>
+				<c:if test="${begin < 1}">
+					<c:set var="begin" value="1"/>
+					<c:set var="end" value="10"/>
+				</c:if>
+				<%--尾溢出 --%>
+				<c:if test="${end > pageBean.pageCount}">
+					<c:set var="begin" value="${pageBean.pageCount - 9}"/>
+					<c:set var="end" value="${pageBean.pageCount}"/>
+				</c:if>
+			</c:otherwise>
+		</c:choose>
+		<c:forEach var="i" begin="${begin}" end="${end}">
+			<c:choose>
+				<c:when test="${i eq pageBean.pageNow}">
+					[${i}]
+				</c:when>
+				<c:otherwise>
+					<a href="<c:url value='/CustomerServlet?method=findAll&pageNow=${i}'/>">[${i}]</a>
+				</c:otherwise>
+			</c:choose>
+		</c:forEach>
 		<c:if test="${pageBean.pageNow < pageBean.pageCount}">
-		<a href="<c:url value='/CustomerServlet?method=findAll&pageNow=${pageBean.pageNow+1}'/>">下一页</a>
+			<a href="<c:url value='/CustomerServlet?method=findAll&pageNow=${pageBean.pageNow+1}'/>">下一页</a>
 		</c:if>
 		<a href="<c:url value='/CustomerServlet?method=findAll&pageNow=${pageBean.pageCount}'/>">尾页</a>
 	</center>
