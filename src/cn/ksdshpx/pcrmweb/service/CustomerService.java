@@ -4,6 +4,7 @@ import java.util.List;
 
 import cn.ksdshpx.pwebcrm.dao.CustomerDao;
 import cn.ksdshpx.pwebcrm.domain.Customer;
+import cn.ksdshpx.pwebcrm.domain.PageBean;
 
 /**
  * 业务逻辑层
@@ -28,8 +29,8 @@ public class CustomerService {
 	 * 
 	 * @return
 	 */
-	public List<Customer> findAll() {
-		return customerDao.findAll();
+	public PageBean<Customer> findAll(Integer pageNow, Integer pageSize) {
+		return customerDao.findAll(pageNow, pageSize);
 	}
 
 	/**
@@ -62,6 +63,7 @@ public class CustomerService {
 
 	/**
 	 * 多条件组合查询
+	 * 
 	 * @param cretiaria
 	 * @return
 	 */

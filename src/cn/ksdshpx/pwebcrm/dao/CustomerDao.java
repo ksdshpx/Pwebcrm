@@ -12,10 +12,12 @@ import java.util.List;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import cn.itcast.jdbc.TxQueryRunner;
 import cn.itcast.utils.CommonUtils;
 import cn.ksdshpx.pwebcrm.domain.Customer;
+import cn.ksdshpx.pwebcrm.domain.PageBean;
 
 public class CustomerDao {
 	private static QueryRunner qr = new TxQueryRunner();
@@ -41,10 +43,23 @@ public class CustomerDao {
 	 * 
 	 * @return
 	 */
-	public List<Customer> findAll() {
+	public PageBean<Customer> findAll(Integer pageNow, Integer pageSize) {
 		try {
-			String sql = "SELECT * FROM t_customer";
-			return qr.query(sql, new BeanListHandler<Customer>(Customer.class));
+			// 1.创建pageBean对象
+			PageBean<Customer> pageBean = new PageBean<>();
+			// 2.设置pageBean的pageNow以及pageSize
+			pageBean.setPageNow(pageNow);
+			pageBean.setPageSize(pageSize);
+			// 3.得到rowCount
+			String sql = "SELECT COUNT(*) FROM t_customer";
+			Number rowCount = (Number) qr.query(sql, new ScalarHandler());
+			pageBean.setRowCount(rowCount.intValue());
+			// 4.得到beanList
+			sql = "SELECT * FROM t_customer  ORDER BY cname LIMIT ?,?";
+			List<Customer> beanList = qr.query(sql, new BeanListHandler<Customer>(Customer.class),
+					(pageNow - 1) * pageSize, pageSize);
+			pageBean.setBeanList(beanList);
+			return pageBean;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -131,11 +146,11 @@ public class CustomerDao {
 			}
 			if (!(cellphone == null) && !(cellphone == "")) {
 				stringBuilder.append(" and cellphone like ?");
-				arrayList.add("%" + cellphone +"%");
+				arrayList.add("%" + cellphone + "%");
 			}
 			if (!(email == null) && !(email == "")) {
 				stringBuilder.append(" and email like ?");
-				arrayList.add("%" + email +"%");
+				arrayList.add("%" + email + "%");
 			}
 			list = qr.query(stringBuilder.toString(), new BeanListHandler<Customer>(Customer.class),
 					arrayList.toArray());

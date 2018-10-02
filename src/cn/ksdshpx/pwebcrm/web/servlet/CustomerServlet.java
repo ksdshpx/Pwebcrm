@@ -11,6 +11,7 @@ import cn.itcast.servlet.BaseServlet;
 import cn.itcast.utils.CommonUtils;
 import cn.ksdshpx.pcrmweb.service.CustomerService;
 import cn.ksdshpx.pwebcrm.domain.Customer;
+import cn.ksdshpx.pwebcrm.domain.PageBean;
 
 /**
  * Web层
@@ -55,12 +56,29 @@ public class CustomerServlet extends BaseServlet {
 	 */
 	public String findAll(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// 1.调用service的findAll方法
-		List<Customer> customerList = customerService.findAll();
-		// 2.往request域中设置值
-		request.setAttribute("customerList", customerList);
-		// 3.转发到msg.jsp
+		// 1.获取页面传递的当前页pageNow
+		Integer pageNow = getPageNow(request);
+		// 2.给定每页记录数pageSize
+		Integer pageSize = 10;
+		// 3.使用pageNow和pageSize调用service方法，得到PageBean，保存到request域中
+		PageBean<Customer> pageBean = customerService.findAll(pageNow, pageSize);
+		request.setAttribute("pageBean", pageBean);
+		// 4.转发到list.jsp
 		return "f:/list.jsp";
+	}
+
+	/**
+	 * 获取当前页 如果pageNow参数不存在，则pageNow=1,如果pageNow参数存在，转换成Integer类型即可
+	 * 
+	 * @param request
+	 * @return
+	 */
+	private Integer getPageNow(HttpServletRequest request) {
+		String pageNow = request.getParameter("pageNow");
+		if (pageNow == null || pageNow.trim().isEmpty()) {
+			return 1;
+		}
+		return Integer.parseInt(pageNow);
 	}
 
 	/**

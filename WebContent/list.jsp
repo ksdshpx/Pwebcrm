@@ -30,7 +30,7 @@
 			<th>描述</th>
 			<th>操作</th>
 		</tr>
-		<c:forEach items="${requestScope.customerList}" var="customer">
+		<c:forEach items="${requestScope.pageBean.beanList}" var="customer">
 			<tr>
 				<td>${customer.cname}</td>
 				<td>${customer.gender}</td>
@@ -44,5 +44,17 @@
 			</tr>
 		</c:forEach>
 	</table>
+	<br/>
+	<center>
+		第${pageBean.pageNow}页/共${pageBean.pageCount}页
+		<a href="<c:url value='/CustomerServlet?method=findAll&pageNow=1'/>">首页</a>
+		<c:if test="${pageBean.pageNow > 1}">
+		<a href="<c:url value='/CustomerServlet?method=findAll&pageNow=${pageBean.pageNow-1}'/>">上一页</a>
+		</c:if>
+		<c:if test="${pageBean.pageNow < pageBean.pageCount}">
+		<a href="<c:url value='/CustomerServlet?method=findAll&pageNow=${pageBean.pageNow+1}'/>">下一页</a>
+		</c:if>
+		<a href="<c:url value='/CustomerServlet?method=findAll&pageNow=${pageBean.pageCount}'/>">尾页</a>
+	</center>
 </body>
 </html>
