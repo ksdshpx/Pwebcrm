@@ -67,7 +67,7 @@ public class CustomerService {
 	 * @param cretiaria
 	 * @return
 	 */
-	public List<Customer> queryByCretiaria(Customer cretiaria) {
-		return customerDao.queryByCretiaria(cretiaria);
+	public PageBean<Customer> queryByCretiaria(Customer cretiaria, Integer pageNow, Integer pageSize) {
+		return customerDao.queryByCretiaria(cretiaria, pageNow, pageSize);
 	}
 }

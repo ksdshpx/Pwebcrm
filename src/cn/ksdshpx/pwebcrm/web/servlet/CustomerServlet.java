@@ -1,13 +1,11 @@
 package cn.ksdshpx.pwebcrm.web.servlet;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import cn.itcast.servlet.BaseServlet;
 import cn.itcast.utils.CommonUtils;
 import cn.ksdshpx.pcrmweb.service.CustomerService;
 import cn.ksdshpx.pwebcrm.domain.Customer;
@@ -79,6 +77,19 @@ public class CustomerServlet extends BaseServlet {
 			return 1;
 		}
 		return Integer.parseInt(pageNow);
+	}
+
+	/**
+	 * 获取请求Url
+	 * 
+	 * @param request
+	 * @return
+	 */
+	private String getUrl(HttpServletRequest request) {
+		String contextPath = request.getContextPath();
+		String servletPath = request.getServletPath();
+		String queryString = request.getQueryString();
+		return contextPath + servletPath + "?" + queryString;
 	}
 
 	/**
@@ -155,13 +166,22 @@ public class CustomerServlet extends BaseServlet {
 	 */
 	public String queryByCretiaria(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// 1.封装表单数据到Customer对象
+		// 0.封装条件对象到Customer对象中
 		Customer cretiaria = CommonUtils.toBean(request.getParameterMap(), Customer.class);
-		// 2.调用service方法，根据条件对象查询
-		List<Customer> customerList = customerService.queryByCretiaria(cretiaria);
-		// 3.保存查询结果到request域中
-		request.setAttribute("customerList", customerList);
-		// 4.转发到list.jsp
+		// 1.获取pageNow
+		Integer pageNow = getPageNow(request);
+		// 2.给定pageSize
+		Integer pageSize = 10;
+		// 3.通过pageNow,pageSize以及条件对象调用service方法，返回PageBean
+		PageBean<Customer> pageBean = customerService.queryByCretiaria(cretiaria, pageNow, pageSize);
+		String url = getUrl(request);
+		if (url.contains("&pageNow=")) {
+			url = url.substring(0, url.indexOf("&pageNow="));
+		}
+		pageBean.setUrl(url);
+		// 4.保存PageBean对象到request域中
+		request.setAttribute("pageBean", pageBean);
+		// 5.转发到list.jsp
 		return "f:/list.jsp";
 	}
 }

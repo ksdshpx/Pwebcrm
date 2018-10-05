@@ -125,38 +125,56 @@ public class CustomerDao {
 	 * 多条件组合查询
 	 * 
 	 * @param cretiaria
+	 * @param pageSize
+	 * @param pageNow
 	 * @return
 	 */
-	public List<Customer> queryByCretiaria(Customer cretiaria) {
-		List<Customer> list = null;
+	public PageBean<Customer> queryByCretiaria(Customer cretiaria, Integer pageNow, Integer pageSize) {
+		PageBean<Customer> pageBean = null;
 		try {
-			StringBuilder stringBuilder = new StringBuilder("SELECT * FROM t_customer WHERE 1=1");
-			ArrayList arrayList = new ArrayList();
+			// 1.创建PageBean对象，设置已有属性pageNow和pageSize
+			pageBean = new PageBean<>();
+			pageBean.setPageNow(pageNow);
+			pageBean.setPageSize(pageSize);
+			// 2.得到rowCount
+			StringBuilder baseSql = new StringBuilder("SELECT COUNT(*) FROM t_customer");
+			StringBuilder whereSql = new StringBuilder(" WHERE 1=1");
+			ArrayList<Object> params = new ArrayList<>();
 			String cname = cretiaria.getCname();
 			String gender = cretiaria.getGender();
 			String cellphone = cretiaria.getCellphone();
 			String email = cretiaria.getEmail();
 			if (!(cname == null) && !(cname == "")) {
-				stringBuilder.append(" and cname like ?");
-				arrayList.add("%" + cname + "%");
+				whereSql.append(" and cname like ?");
+				params.add("%" + cname + "%");
 			}
 			if (!(gender == null) && !(gender == "")) {
-				stringBuilder.append(" and gender=?");
-				arrayList.add(gender);
+				whereSql.append(" and gender=?");
+				params.add(gender);
 			}
 			if (!(cellphone == null) && !(cellphone == "")) {
-				stringBuilder.append(" and cellphone like ?");
-				arrayList.add("%" + cellphone + "%");
+				whereSql.append(" and cellphone like ?");
+				params.add("%" + cellphone + "%");
 			}
 			if (!(email == null) && !(email == "")) {
-				stringBuilder.append(" and email like ?");
-				arrayList.add("%" + email + "%");
+				whereSql.append(" and email like ?");
+				params.add("%" + email + "%");
 			}
-			list = qr.query(stringBuilder.toString(), new BeanListHandler<Customer>(Customer.class),
-					arrayList.toArray());
+			Number rowCountByNumber = (Number) qr.query(baseSql.append(whereSql).toString(), new ScalarHandler(),
+					params.toArray());
+			Integer rowCount = rowCountByNumber.intValue();
+			pageBean.setRowCount(rowCount);
+			// 3.得到beanList
+			StringBuilder sql = new StringBuilder("SELECT * FROM t_customer");
+			StringBuilder limitSql = new StringBuilder(" LIMIT ?,?");
+			params.add((pageNow - 1) * pageSize);
+			params.add(pageSize);
+			List<Customer> beanList = qr.query(sql.append(whereSql).append(limitSql).toString(),
+					new BeanListHandler<Customer>(Customer.class), params.toArray());
+			pageBean.setBeanList(beanList);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return list;
+		return pageBean;
 	}
 }
