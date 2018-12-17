@@ -47,9 +47,9 @@
 	<br/>
 	<center>
 		第${pageBean.pageNow}页/共${pageBean.pageCount}页
-		<a href="${pageBean.url}&pageNow=1">首页</a>
+		<a href="<c:url value='/CustomerServlet?method=findAll&pageNow=1'/>">首页</a>
 		<c:if test="${pageBean.pageNow > 1}">
-			<a href="${pageBean.url}&pageNow=${pageBean.pageNow-1}">上一页</a>
+			<a href="<c:url value='/CustomerServlet?method=findAll&pageNow=${pageBean.pageNow-1}'/>">上一页</a>
 		</c:if>
 		<%--分页页码计算 --%>
 		<c:choose>
@@ -80,14 +80,14 @@
 					[${i}]
 				</c:when>
 				<c:otherwise>
-					<a href="${pageBean.url}&pageNow=${i}">[${i}]</a>
+					<a href="<c:url value='/CustomerServlet?method=findAll&pageNow=${i}'/>">[${i}]</a>
 				</c:otherwise>
 			</c:choose>
 		</c:forEach>
 		<c:if test="${pageBean.pageNow < pageBean.pageCount}">
-			<a href="${pageBean.url}&pageNow=${pageBean.pageNow+1}">下一页</a>
+			<a href="<c:url value='/CustomerServlet?method=findAll&pageNow=${pageBean.pageNow+1}'/>">下一页</a>
 		</c:if>
-		<a href="${pageBean.url}&pageNow=${pageBean.pageCount}">尾页</a>
+		<a href="<c:url value='/CustomerServlet?method=findAll&pageNow=${pageBean.pageCount}'/>">尾页</a>
 	</center>
 </body>
 </html>

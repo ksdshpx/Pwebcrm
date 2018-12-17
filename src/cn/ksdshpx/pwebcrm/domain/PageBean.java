@@ -9,10 +9,9 @@ import java.util.List;
 public class PageBean<T> {
 	private Integer pageNow;// 当前页
 	private Integer pageSize;// 每页记录数
-	// private Integer pageCount;// 总页数
+	//private Integer pageCount;// 总页数
 	private Integer rowCount;// 总记录
 	private List<T> beanList;// 当前页数据
-	private String url;// url后的参数
 
 	public Integer getPageNow() {
 		return pageNow;
@@ -55,13 +54,4 @@ public class PageBean<T> {
 	public void setBeanList(List<T> beanList) {
 		this.beanList = beanList;
 	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
 }
